@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>FlaskBlog</title>
-</head>
-<body>
-   <h1>Welcome to FlaskBlog</h1>
-</body>
-</html>
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Witaj {{client.name}} w sklepie {% endblock %}</h1>
+
+    <table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">produkt</th>
+      <th scope="col">cena jednostkowa(zl)</th>
+      <th scope="col">sztuk</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for product in product_list %}
+    <tr>
+    
+      <td>{{product.name}}</td>
+      <td>{{product.unit_price}}</td>
+      <td>{{product.unit_in_stock}}</td>
+      <td>
+        <form method="post" action="/buy">
+        <input type="hidden" name="client_name" value={{client.name}} /> 
+        <input type="hidden" name="price" value={{product.unit_price}} /> 
+        <input type="hidden" name="product_name" value={{product.name}} /> 
+        <input type="submit" value="Kup" class="btn btn-success" >
+    </form>
+  </td>
+    </tr>
+    {% endfor %}
+  
+  </tbody>
+</table>
+  
+<h2>Stan twojego konta to: {{client.wallet}} </h2>
+<form method="post" action="/topup">
+  <p><input type = 'text' name = 'value'/></p>
+  <input type="hidden" name="client_name" value={{client.name}} /> 
+  <input type="submit" value="Doładuj konto" class="btn btn-info" >
+</form>
+
+<h3>Sprawdz listę zakupów</h3>
+<form method="post" action="/shopping_list">
+  <input type="hidden" name="client_name" value={{client.name}} /> 
+  <input type="submit" value="Pokaż listę" class="btn btn-info" >
+</form>
+{% endblock %}
